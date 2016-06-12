@@ -4,13 +4,22 @@ Kubernetes image with cni and calico plugins.
 Example use
 
 ```
+export K8S_VERSION=v1.2.4
+export ARCH=amd64
+# HYPERKUBE_IMAGE="quay.io/coreos/hyperkube:${K8S_VERSION}_coreos.cni.1"
+export HYPERKUBE_IMAGE="gcr.io/google_containers/hyperkube:${K8S_VERSION}"
+export INFRA_IMAGE="gcr.io/google_containers/pause:3.0"
+export ETCD_ENDPOINTS="http://127.0.0.1:4001"
+export ADVERTISE_IP="127.0.0.1" #changeme
+
+
 mount -o noatime,bind /var/lib/kubelet /var/lib/kubelet
 mount --make-shared /var/lib/kubelet
 docker run -d \
       --restart always --name kubemaster \
       -e ETCD_ENDPOINTS="${ETCD_ENDPOINTS}" -e HOSTNAME="${ADVERTISE_IP}" -e IP="${ADVERTISE_IP}"\
       -e CALICO_CTL_CONTAINER='TRUE' -e CALICO_NETWORKING='true' \
-      -e FELIX_FELIXHOSTNAME="${ADVERTISE_IP}" -e FELIX_ETCDENDPOINTS="http://127.0.0.1:2379" \
+      -e FELIX_FELIXHOSTNAME="${ADVERTISE_IP}" -e FELIX_ETCDENDPOINTS="${ETCD_ENDPOINTS}" \
       --volume=/dev:/dev:rw \
       --volume=/etc/localtime:/etc/localtime:ro \
       --volume=/:/rootfs:rw \
