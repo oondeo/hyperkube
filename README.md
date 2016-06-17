@@ -1,17 +1,15 @@
 # hyperkube
-Kubernetes image with cni and calico plugins.
+Kubernetes image with cni and calico plugins. Works with docker > 1.9
 
 Example use
 
 ```
 export K8S_VERSION=v1.2.4
 export ARCH=amd64
-# HYPERKUBE_IMAGE="quay.io/coreos/hyperkube:${K8S_VERSION}_coreos.cni.1"
-export HYPERKUBE_IMAGE="gcr.io/google_containers/hyperkube:${K8S_VERSION}"
 export INFRA_IMAGE="gcr.io/google_containers/pause:3.0"
 export ETCD_ENDPOINTS="http://127.0.0.1:4001"
 export ADVERTISE_IP="127.0.0.1" #changeme
-
+export HYPERKUBE_IMAGE="oondeo/hyperkube"
 
 mount -o noatime,bind /var/lib/kubelet /var/lib/kubelet
 mount --make-shared /var/lib/kubelet
@@ -20,14 +18,14 @@ docker run -d \
       -e ETCD_ENDPOINTS="${ETCD_ENDPOINTS}" -e HOSTNAME="${ADVERTISE_IP}" -e IP="${ADVERTISE_IP}"\
       -e CALICO_CTL_CONTAINER='TRUE' -e CALICO_NETWORKING='true' \
       -e FELIX_FELIXHOSTNAME="${ADVERTISE_IP}" -e FELIX_ETCDENDPOINTS="${ETCD_ENDPOINTS}" \
-      --volume=/dev:/dev:rw \
+      --volume=/dev:/dev:ro \
       --volume=/etc/localtime:/etc/localtime:ro \
       --volume=/:/rootfs:rw \
       --volume=/sys:/sys:rw \
-      --volume=/etc/kubernetes/cni:/etc/kubernetes/cni:rw \
+      --volume=/etc/kubernetes:/etc/kubernetes:rw \
       --volume=/etc/ssl/certs:/etc/ssl/certs:ro \
       --volume=/var/lib/docker:/var/lib/docker:rw \
-      --volume=/var/lib/kubelet:/var/lib/kubelet:rw \
+      --volume=/var/lib/kubelet:/var/lib/kubelet:shared \
       --volume=/var/log:/var/log:rw \
       --volume=/var/run:/var/run:rw \
       --net=host \

@@ -1,5 +1,5 @@
-FROM gcr.io/google_containers/hyperkube-amd64:v1.2.4
-ENV K8S_VERSION=v1.2.4 CALICOCNI_VERSION=v1.3.1 CNI_VERSION=v0.3.0 CALICO_VERSION=v0.20.0
+FROM gcr.io/google_containers/hyperkube-amd64:v1.2.5-beta.0
+ENV K8S_VERSION=v1.2.5-beta.0 CALICOCNI_VERSION=v1.3.1 CNI_VERSION=v0.3.0 CALICO_VERSION=v0.20.0
 
 RUN apt-get update && apt-get install -y conntrack vim-nox && rm -rf /var/lib/apt
 
